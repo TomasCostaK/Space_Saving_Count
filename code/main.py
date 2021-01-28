@@ -29,7 +29,7 @@ if __name__ == "__main__":
         if o in ("-h", "--help"):
             usage()
             sys.exit()
-        elif o == "-t":
+        elif o == "-e":
             try:
                 epsilon = float(a)
             except Exception:
@@ -46,16 +46,17 @@ if __name__ == "__main__":
 
 
     # we calculate exact values to compare afterwards
-    counter_exact = ExactCounter(file_path)
+    counter_exact = ExactCounter(file_path, epsilon)
     counter_exact.count()
-    print(counter_exact.getCounter())
-    exact_dict = counter_exact.getDict()
+    print("Exact Count:\t\t", counter_exact.getCounter())
+    print(counter_exact.getDict())
 
     # we calculate the values with space saving
     counter_space_saving = SpaceSavingCounter(file_path, epsilon)
     counter_space_saving.count()
-    print(counter_space_saving.getCounter())
-    space_saving_dict = counter_space_saving.getDict()
+    print("Space Saving Count:\t", counter_space_saving.getCounter())
+    print(counter_space_saving.getDict())
+
     """
     # Results analysis
     print(f"Executing {num_trials} trials on {epsilon} counter:\n")

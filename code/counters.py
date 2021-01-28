@@ -5,11 +5,12 @@ from collections import defaultdict
 import math
 
 class Counter:
-    def __init__(self, file_path):
+    def __init__(self, file_path, epsilon):
         # Initialize array and declare file_path
         self.file_path = file_path
         self.tokens = []
         self.word_dict = defaultdict(lambda:  0)
+        self.epsilon = epsilon
 
     # Auxiliary function to help call multiple times
     def resetVars(self):
@@ -25,14 +26,13 @@ class Counter:
     def index(self):
         pass
 
-    def addToken(self,token):
-        self.word_dict[token] += 1
-
     def getCounter(self):
         return sum([ item for item in self.word_dict.values() ])
 
     def getDict(self):
-        return self.word_dict
+        k = int(1/self.epsilon)
+        #Always returns the top k words, as calculated by k=1/epsilon
+        return sorted(self.word_dict.items(), key=lambda x: x[1], reverse=True)[:k]
 
     def count(self):
         self.resetVars()
@@ -44,15 +44,26 @@ class ExactCounter(Counter):
     def index(self):
         # treatment just for counter
         for token in self.tokens:
-            self.addToken(token)
-
+            self.word_dict[token] += 1
 
 class SpaceSavingCounter(Counter):
-    def __init__(self, file_path, epsilon):
-        super().__init__(file_path)
-        self.epsilon = epsilon
 
     def index(self):
         # treatment just for counter, this is acting as data_stream
+        k = 1 / self.epsilon
         for token in self.tokens:
-            self.addToken(token)
+            #print("\nAnalyzing token: %s" % (token))
+            # case for the token already in our dict
+            if token in self.word_dict.keys():
+                self.word_dict[token] += 1
+            # case there is still space left in our dict
+            elif len(self.word_dict.keys()) < k:
+                self.word_dict[token] = 1
+            # case where there is no space left, so we eliminate the smallest one and increment its counter with new "id"
+            else:
+                ordered_dict = sorted(self.word_dict.items(), key=lambda x: x[1])
+                #print(ordered_dict)
+                smallest_key, smallest_counter = ordered_dict[0]
+                #print("removing %s" % (smallest_key))
+                self.word_dict.pop(smallest_key)
+                self.word_dict[token] = smallest_counter + 1
