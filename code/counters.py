@@ -3,6 +3,7 @@ import math
 import re
 from collections import defaultdict 
 import math
+import sys
 
 class Counter:
     def __init__(self, file_path, epsilon):
@@ -61,9 +62,12 @@ class SpaceSavingCounter(Counter):
                 self.word_dict[token] = 1
             # case where there is no space left, so we eliminate the smallest one and increment its counter with new "id"
             else:
-                ordered_dict = sorted(self.word_dict.items(), key=lambda x: x[1])
+                try:
+                    ordered_dict = sorted(self.word_dict.items(), key=lambda x: x[1])
+                    smallest_key, smallest_counter = ordered_dict[0]
+                except:
+                    sys.exit()
                 #print(ordered_dict)
-                smallest_key, smallest_counter = ordered_dict[0]
                 #print("removing %s" % (smallest_key))
                 self.word_dict.pop(smallest_key)
                 self.word_dict[token] = smallest_counter + 1
