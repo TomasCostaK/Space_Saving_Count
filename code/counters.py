@@ -17,12 +17,10 @@ class Counter:
 
     # Baseline function, all inherited classes will change this method, this is the method were we split into tokens
     def tokenize(self):
-        final_tokens = []
         with open(self.file_path) as file:
             for lines in file:
                 tokens = re.sub("[^0-9a-zA-Z]+"," ",lines).lower().split(" ")
-                final_tokens.extend(token for token in tokens if len(token)>3)
-        self.tokens.extend(final_tokens)
+                self.tokens.extend(token for token in tokens if len(token)>3)
 
     def index(self):
         pass
@@ -30,6 +28,11 @@ class Counter:
     def addToken(self,token):
         self.word_dict[token] += 1
 
+    def getCounter(self):
+        return sum([ item for item in self.word_dict.values() ])
+
+    def getDict(self):
+        return self.word_dict
 
     def count(self):
         self.resetVars()
@@ -42,18 +45,14 @@ class ExactCounter(Counter):
         # treatment just for counter
         for token in self.tokens:
             self.addToken(token)
-            self.counter_value += 1
-        
-        # calculate word_value
-        self.word_counter += len(self.tokens)
 
 
 class SpaceSavingCounter(Counter):
+    def __init__(self, file_path, epsilon):
+        super().__init__(file_path)
+        self.epsilon = epsilon
+
     def index(self):
-        # treatment just for counter
+        # treatment just for counter, this is acting as data_stream
         for token in self.tokens:
             self.addToken(token)
-            self.counter_value += 1
-        
-        # calculate word_value
-        self.word_counter += len(self.tokens)
