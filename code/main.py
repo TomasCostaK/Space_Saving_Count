@@ -49,51 +49,20 @@ if __name__ == "__main__":
     counter_exact = ExactCounter(file_path, epsilon)
     counter_exact.count()
     print("Exact Count:\t\t", counter_exact.getCounter())
-    print(counter_exact.getDict())
+    exact_dict = counter_exact.getDict()
+    #print(exact_dict)
 
     # we calculate the values with space saving
     counter_space_saving = SpaceSavingCounter(file_path, epsilon)
     counter_space_saving.count()
     print("Space Saving Count:\t", counter_space_saving.getCounter())
-    print(counter_space_saving.getDict())
+    space_dict = counter_space_saving.getDict()
+    #print(space_dict)
 
-    """
     # Results analysis
-    print(f"Executing {num_trials} trials on {epsilon} counter:\n")
-    tic = time.time()
-    trial_values = []
-    for i in range(num_trials):
-        counter.count()
-        val = counter.getCount()
-        trial_values.append(val)
-
-    # evaluate only the last words into a dict
-    top_words = counter.getTopWords(num_trials)
-
-    toc = time.time()
-    # We use NP to more efficiently calculate averages and std devs
-    trial_values = np.array(trial_values)
-
-    # Comparisons
-    relative_errors_array = np.absolute(trial_values-real_value) / real_value
-    max_re = np.max(relative_errors_array)
-    min_re = np.min(relative_errors_array)
-    mean_re = np.mean(relative_errors_array)
-
-
-    # Print top words
-    print("Ten most frequent words: (average)")
-    print("Word \t\t Exact Count \t Avg. Est. Count \t Mean absolute error \t Mean relative error")
-    print("----------------------------------------------------------------------------------------------------")
-    for word in top_words:
-        print(f"{word[0]} \t\t {exact_dict[word[0]]} \t\t {word[1]} \t\t\t {abs(word[1]-exact_dict[word[0]]):.1f} \t\t\t {abs(word[1]-exact_dict[word[0]])/ exact_dict[word[0]]*100:.2f}%")
-
-    # Print out measures
-    print("\nGlobal counter measures:")
-    print(f"Maximum relative error: {max_re*100:.3f}%\nMinimum relative error: {min_re* 100:.3f}% \nMean relative error: {mean_re*100:.3f}%\n")
+    exact_array = [ item[0] for item in exact_dict]
+    space_array = [ item[0] for item in space_dict]
     
-
-    print(f"Calculated in {toc-tic:.2f} seconds")
-    # we dont go any further, this is the testing batch
-    sys.exit()
-    """
+    length = len(exact_dict)
+    accuracy = len(list(filter(lambda x: x in exact_array, space_array))) / length
+    print("\nAccuracy of the %d most frequent words is: %.2f " % (length, accuracy*100))
