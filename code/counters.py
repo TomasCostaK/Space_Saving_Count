@@ -30,6 +30,9 @@ class Counter:
     def getCounter(self):
         return sum([ item for item in self.word_dict.values() ])
 
+    def getDistinctCounter(self):
+        return len(self.word_dict.keys())
+
     def getDict(self):
         k = int(1/self.epsilon)
         #Always returns the top k words, as calculated by k=1/epsilon

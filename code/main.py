@@ -48,7 +48,7 @@ if __name__ == "__main__":
     # we calculate exact values to compare afterwards
     counter_exact = ExactCounter(file_path, epsilon)
     counter_exact.count()
-    print("Exact Count:\t\t", counter_exact.getCounter())
+    print("# Words\nExact Count:\t\t", counter_exact.getCounter())
     exact_dict = counter_exact.getDict()
     #print(exact_dict)
 
@@ -58,6 +58,10 @@ if __name__ == "__main__":
     print("Space Saving Count:\t", counter_space_saving.getCounter())
     space_dict = counter_space_saving.getDict()
     #print(space_dict)
+
+    # Get Distinct Counters
+    print("\n# Distinct Words\nExact Distinct Count:\t\t", counter_exact.getDistinctCounter())
+    print("Space saving Distinct Count:\t", counter_space_saving.getDistinctCounter())
 
     # Results analysis
     exact_array = [ item[0] for item in exact_dict]
